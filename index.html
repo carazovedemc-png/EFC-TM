@@ -3,63 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Модель - Hana</title>
-    <link rel="stylesheet" href="style.css">
+    <title>3D Hana</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        #model-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        #model-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            z-index: 100;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>🎎 3D Модель "Hana"</h1>
-            <p class="subtitle">Аниме модель от LessaB3D</p>
-        </header>
+    <div class="loading">Загрузка 3D модели...</div>
+    <div id="model-container"></div>
 
-        <main class="main-content">
-            <div id="viewer-container" class="viewer-container">
-                <div class="loading">Загрузка 3D модели...</div>
-            </div>
-
-            <div class="controls">
-                <button id="reset-view" class="btn">🔄 Сбросить вид</button>
-                <button id="auto-rotate" class="btn">🔄 Авто-вращение</button>
-                <button id="fullscreen" class="btn">📺 Полный экран</button>
-            </div>
-
-            <div class="info-panel">
-                <h2>📋 Информация о модели:</h2>
-                <ul>
-                    <li><strong>Название:</strong> ANIME - Hana</li>
-                    <li><strong>Автор:</strong> LessaB3D</li>
-                    <li><strong>Полигонов:</strong> 55,000</li>
-                    <li><strong>Текстуры:</strong> 4K PBR</li>
-                </ul>
-            </div>
-
-            <div class="links">
-                <h2>🔗 Ссылки:</h2>
-                <a href="https://sketchfab.com/3d-models/anime-hana-23b3b5d1c1d54783bf189da609ffcace" 
-                   target="_blank" class="link-btn">
-                    🌐 Открыть на Sketchfab
-                </a>
-                <a href="https://skfb.ly/pqs7A" 
-                   target="_blank" class="link-btn">
-                    📱 Короткая ссылка
-                </a>
-                <a href="https://sketchfab.com/lessaB3D" 
-                   target="_blank" class="link-btn">
-                    👨‍🎨 Автор: LessaB3D
-                </a>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <p>Для управления: пальцем вращайте, двумя пальцами - масштабируйте</p>
-            <p class="telegram-info">Работает через Telegram Mini App</p>
-        </footer>
-    </div>
-
-    <script src="app.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.setBackgroundColor('#000000');
+        tg.setHeaderColor('#000000');
+        
+        // Загрузка 3D модели
+        const container = document.getElementById('model-container');
+        const loading = document.querySelector('.loading');
+        
+        const iframe = document.createElement('iframe');
+        iframe.title = "ANIME - Hana";
+        iframe.allow = "autoplay; fullscreen; xr-spatial-tracking; gyroscope; accelerometer";
+        iframe.allowfullscreen = true;
+        iframe.mozallowfullscreen = true;
+        iframe.webkitallowfullscreen = true;
+        
+        // Параметры для максимальной производительности и чистого вида
+        const modelId = "23b3b5d1c1d54783bf189da609ffcace";
+        const params = new URLSearchParams({
+            ui_controls: 0,           // без UI контролов
+            ui_infos: 0,             // без информационной панели
+            ui_stop: 0,              // без кнопки остановки
+            ui_inspector: 0,         // без инспектора
+            ui_watermark: 0,         // без водяных знаков
+            ui_help: 0,              // без кнопки помощи
+            ui_settings: 0,          // без настроек
+            ui_annotations: 0,       // без аннотаций
+            ui_color: '000000',      // черный UI
+            autostart: 1,            // автозапуск
+            preload: 1,              // предзагрузка
+            camera: 0,               // начальная камера
+            transparent: 0,          // не прозрачный фон
+            autospin: 0,             // без авто-вращения
+            scrollwheel: 0,          // без скролла колесиком
+            annotation_tooltip: 0,   // без подсказок
+            annotations_visible: 0,  // аннотации скрыты
+            orbit_constraint_pan: 1, // разрешить панорамирование
+            orbit_constraint_zoom: 1, // разрешить зум
+            orbit_constraint_rotate: 1 // разрешить вращение
+        });
+        
+        iframe.src = `https://sketchfab.com/models/${modelId}/embed?${params.toString()}`;
+        
+        iframe.onload = function() {
+            loading.style.display = 'none';
+            
+            // Отправляем сообщение для скрытия всех UI элементов
+            setTimeout(() => {
+                iframe.contentWindow.postMessage({
+                    type: 'viewerSetParameter',
+                    parameter: 'ui_controls',
+                    value: 0
+                }, '*');
+            }, 1000);
+        };
+        
+        container.appendChild(iframe);
+        
+        // Обработчик для полноэкранного режима при двойном тапе
+        let lastTap = 0;
+        container.addEventListener('touchend', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 300 && tapLength > 0) {
+                // Двойной тап - переключение полноэкранного режима
+                if (!document.fullscreenElement) {
+                    container.requestFullscreen().catch(err => {
+                        console.log('Ошибка полноэкранного режима:', err);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+            lastTap = currentTime;
+        });
+        
+        // Скрываем кнопку "Назад" в Telegram
+        tg.BackButton.hide();
+    </script>
 </body>
 </html>
