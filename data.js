@@ -12,19 +12,19 @@ const APP_CONFIG = {
     
     // Администраторы (Telegram ID)
     admins: [
-        , // Пример ID администратора
+        1745639675, // Пример ID администратора
     ],
     
     // Пользователи с доступом к ставкам (18+)
     betsAllowedUsers: [
-        123456789, // Пример ID
+        1745639675, // Пример ID
     ],
     
     // КОНТРАКТЫ БОЙЦОВ
     // Telegram ID: ссылка на контракт
     contracts: {
         // Пример:
-        // 123456789: "https://example.com/contract.jpg",
+        // 1745639675: "https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-po-ispolzovaniyu-programm-11-06",
     },
     
     // БОИ БОЙЦОВ
@@ -50,11 +50,11 @@ const APP_CONFIG = {
         "no_category": [
             {
                 id: 1,
-                name: "Иван Петров",
+                name: "Рустем Гильманов",
                 rank: "#1 ВНЕ КАТЕГОРИЙ",
                 record: "21-1-0", // победы-поражения-ничьи
                 photo: "https://via.placeholder.com/100/FF6B6B/FFFFFF?text=IP",
-                sport: "MMA",
+                sport: "Бокс",
                 weight_class: "Тяжелый вес",
                 description: "Чемпион EFC™"
             },
