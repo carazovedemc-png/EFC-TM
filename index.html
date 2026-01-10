@@ -2,11 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EFC™ - Школьные бои</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="https://via.placeholder.com/32/FF6B6B/FFFFFF?text=EFC">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -35,30 +34,34 @@
     <main id="main-content">
         <!-- Главная страница -->
         <section id="home-page" class="page active">
-            <div class="main-content-order">
-                <div class="upcoming-fights">
-                    <h2><i class="fas fa-fist-raised"></i> Предстоящие бои</h2>
-                    <div class="fights-list"></div>
+            <div class="banner-container">
+                <!-- Баннеры загружаются через JS -->
+            </div>
+            
+            <div class="upcoming-fights">
+                <h2><i class="fas fa-fist-raised"></i> Предстоящие бои</h2>
+                <div class="fights-list">
+                    <!-- Загружается через JS -->
                 </div>
-                
-                <div class="news-section">
-                    <h2><i class="fas fa-newspaper"></i> Последние новости</h2>
-                    <div class="news-grid">
-                        <div class="news-card">
-                            <div class="news-date">12.11.2024</div>
-                            <h3>Новый турнир объявлен!</h3>
-                            <p>Стартует зимний чемпионат по школьному EFC™. Регистрация до 30 ноября.</p>
-                        </div>
-                        <div class="news-card">
-                            <div class="news-date">10.11.2024</div>
-                            <h3>Иванов защитил титул</h3>
-                            <p>В прошедшие выходные состоялся главный бой сезона.</p>
-                        </div>
-                        <div class="news-card">
-                            <div class="news-date">05.11.2024</div>
-                            <h3>Набор в секцию хостинга</h3>
-                            <p>Тренер Ислям Нариманович начинает новый набор группы по хостингу.</p>
-                        </div>
+            </div>
+            
+            <div class="news-section">
+                <h2><i class="fas fa-newspaper"></i> Последние новости</h2>
+                <div class="news-grid">
+                    <div class="news-card">
+                        <div class="news-date">12.11.2024</div>
+                        <h3>Новый турнир объявлен!</h3>
+                        <p>Стартует зимний чемпионат по школьному EFC™. Регистрация до 30 ноября.</p>
+                    </div>
+                    <div class="news-card">
+                        <div class="news-date">10.11.2024</div>
+                        <h3>Иванов защитил титул</h3>
+                        <p>В прошедшие выходные состоялся главный бой сезона.</p>
+                    </div>
+                    <div class="news-card">
+                        <div class="news-date">05.11.2024</div>
+                        <h3>Набор в секцию хостинга</h3>
+                        <p>Тренер Ислям Нариманович начинает новый набор группы по хостингу.</p>
                     </div>
                 </div>
             </div>
@@ -68,7 +71,9 @@
         <section id="videos-page" class="page">
             <div class="videos-container">
                 <h2><i class="fas fa-video"></i> Архив боев</h2>
-                <div class="videos-grid"></div>
+                <div class="videos-grid">
+                    <!-- Видео загружаются через JS -->
+                </div>
             </div>
         </section>
 
@@ -77,17 +82,14 @@
             <div class="fighters-page">
                 <h2><i class="fas fa-users"></i> Все бойцы EFC™</h2>
                 
-                <div class="fighters-filter">
-                    <div class="filter-buttons">
-                        <button class="filter-btn active" data-category="all">Все</button>
-                        <button class="filter-btn" data-category="no_category">Вне категорий</button>
-                        <button class="filter-btn" data-category="light">Легкий вес</button>
-                        <button class="filter-btn" data-category="middle">Средний вес</button>
-                        <button class="filter-btn" data-category="mma">MMA</button>
-                        <button class="filter-btn" data-category="boxing">Бокс</button>
-                        <button class="filter-btn" data-category="hosting">Хостинг</button>
-                        <button class="filter-btn" data-category="wrestling">Борьба</button>
-                    </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-category="all">Все</button>
+                    <button class="filter-btn" data-category="no_category">Вне категорий</button>
+                    <button class="filter-btn" data-category="light">Легкий вес</button>
+                    <button class="filter-btn" data-category="middle">Средний вес</button>
+                    <button class="filter-btn" data-category="mma">MMA</button>
+                    <button class="filter-btn" data-category="boxing">Бокс</button>
+                    <button class="filter-btn" data-category="hosting">Хостинг</button>
                 </div>
                 
                 <div class="fighters-container" id="fighters-container">
@@ -170,7 +172,7 @@
                         </div>
                     </button>
 
-                    <!-- Кнопка админ панели (показывается только админам) -->
+                    <!-- Админ панель -->
                     <button class="profile-btn" id="admin-btn" style="display: none;">
                         <div class="btn-icon">
                             <i class="fas fa-crown"></i>
@@ -184,44 +186,6 @@
             </div>
         </section>
     </main>
-
-    <!-- Модальные окна -->
-    
-    <!-- Модалка билетов -->
-    <div id="tickets-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-ticket-alt"></i> Мои билеты</h2>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="tickets-list" class="tickets-list"></div>
-                <div class="tickets-actions">
-                    <button class="btn-primary" id="clear-tickets-btn">
-                        <i class="fas fa-trash"></i> Очистить все билеты
-                    </button>
-                    <button class="btn-secondary modal-close">
-                        <i class="fas fa-times"></i> Закрыть
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Модалка анкеты -->
-    <div id="application-modal" class="modal">
-        <div class="modal-content application-form"></div>
-    </div>
-
-    <!-- Модалка контракта -->
-    <div id="contract-modal" class="modal">
-        <div class="modal-content contract-container"></div>
-    </div>
-
-    <!-- Модалка админ панели -->
-    <div id="admin-modal" class="modal">
-        <div class="modal-content admin-panel"></div>
-    </div>
 
     <!-- Навигация -->
     <nav class="glass-nav">
@@ -247,13 +211,42 @@
         </div>
     </nav>
 
+    <!-- Модальные окна -->
+    <div id="tickets-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-ticket-alt"></i> Мои билеты</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="tickets-list"></div>
+                <div style="margin-top: 20px;">
+                    <button class="btn-secondary" id="clear-tickets-btn">
+                        <i class="fas fa-trash"></i> Очистить все билеты
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-crown"></i> ADMIN PANEL</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="admin-content"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Загрузчик -->
     <div id="loader" class="loader">
         <div class="spinner"></div>
         <div class="loader-text">Загрузка EFC™...</div>
     </div>
 
-    <script src="telegram-auth.js"></script>
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
