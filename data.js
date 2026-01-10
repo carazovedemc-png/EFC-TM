@@ -24,7 +24,7 @@ const APP_CONFIG = {
     // Telegram ID: ссылка на контракт
     contracts: {
         // Пример:
-        // 1745639675: "https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-po-ispolzovaniyu-programm-11-06",
+       1745639675: "https://telegra.ph/POLZOVATELSKOE-SOGLASHENIE-po-ispolzovaniyu-programm-11-06",
     },
     
     // БОИ БОЙЦОВ
