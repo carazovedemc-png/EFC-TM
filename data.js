@@ -231,7 +231,7 @@ const APP_CONFIG = {
     banners: [
         {
             id: 1,
-            imageUrl: "https://images.unsplash.com/photo-1546716425-71f33c8d6c3e?w=800&h=400&fit=crop",
+            imageUrl: "https://sun9-2.userapi.com/s/v1/ig2/-23lLxLyFhE7viOEUD86RzLxMRlwKIdoIZF5PGYY_DsXHQsbXqrw5TwgurrXUBQCNPY5tJurX7CWsqWwPlyHFemD.jpg?quality=95&as=32x16,48x23,72x35,108x53,160x78,240x117,360x176,480x235,540x264,640x313,720x352,964x471&from=bu&u=tgC8ayUUqzwUxJInHliFRTCgWqCaoN5HbE1qrkfkLDc&cs=640x0",
             link: "#fight1",
             active: true
         },
