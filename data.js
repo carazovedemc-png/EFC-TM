@@ -12,36 +12,43 @@ const APP_CONFIG = {
     
     // Администраторы (Telegram ID)
     admins: [
-        1745639675, // Пример ID администратора
+        1745639675, // Ваш ID администратора
     ],
     
     // Пользователи с доступом к ставкам (18+)
     betsAllowedUsers: [
-        1745639675, // Пример ID
+        1745639675, // Ваш ID
     ],
     
     // КОНТРАКТЫ БОЙЦОВ
     // Telegram ID: ссылка на контракт
     contracts: {
-         Пример:
-         1745639675: "https://telegra.ph/CONTRACT-01-09",
+        1745639675: "https://example.com/contract.jpg", // Ваш контракт
     },
     
     // БОИ БОЙЦОВ
     // Telegram ID: массив боев
     userFights: {
-        // Пример:
-         1745639675: [
-             {
-                 id: 1,
-                 opponent: "Иван Иванов",
-                 date: "15.12.2024",
-                 time: "18:00",
-                 place: "Школьный спортзал №1",
-                 reward: 5000,
-                 status: "upcoming" // upcoming, completed, cancelled
-             }
-         ]
+        1745639675: [
+            {
+                id: 1,
+                opponent: "Иван Иванов",
+                date: "15.12.2024",
+                time: "18:00",
+                place: "Школьный спортзал №1",
+                reward: 5000,
+                status: "upcoming" // upcoming, completed, cancelled
+            },
+            {
+                id: 2,
+                opponent: "Алексей Сидоров",
+                date: "20.12.2024",
+                time: "19:00",
+                place: "Школьный спортзал №2",
+                reward: 7500,
+                status: "completed"
+            }
+        ]
     },
     
     // ВСЕ БОЙЦЫ EFC™
@@ -52,12 +59,12 @@ const APP_CONFIG = {
                 id: 1,
                 name: "Иван Петров",
                 rank: "#1 ВНЕ КАТЕГОРИЙ",
-                record: "21-1-0",
+                record: "21-1-0", // победы-поражения-ничьи
                 photo: "https://via.placeholder.com/100/FF6B6B/FFFFFF?text=IP",
                 sport: "MMA",
                 weight_class: "Тяжелый вес",
                 description: "Чемпион EFC™",
-                link: "https://example.com/fighter/1" // Добавлено поле link
+                link: "https://example.com/fighter/1"
             },
             {
                 id: 2,
@@ -68,7 +75,7 @@ const APP_CONFIG = {
                 sport: "Бокс",
                 weight_class: "Средний вес",
                 description: "Претендент на титул",
-                link: "https://telegra.ph/CONTRACT-01-09" // Пустая строка - нет ссылки
+                link: "" // Пустая строка - нет ссылки
             }
         ],
         
