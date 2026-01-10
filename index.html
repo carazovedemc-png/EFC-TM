@@ -2,134 +2,259 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Hana</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EFC™ - Школьные бои</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://via.placeholder.com/32/FF6B6B/FFFFFF?text=EFC">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #000;
-        }
-        
-        #model-container {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        
-        #model-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            z-index: 100;
-        }
-    </style>
 </head>
 <body>
-    <div class="loading">Загрузка 3D модели...</div>
-    <div id="model-container"></div>
+    <!-- Хедер -->
+    <header class="glass-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img id="app-logo" src="" alt="Логотип" class="logo">
+            </div>
+            <h1 id="app-title" class="app-title">EFC™</h1>
+        </div>
+    </header>
 
-    <script>
-        // Telegram Web App
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.setBackgroundColor('#000000');
-        tg.setHeaderColor('#000000');
-        
-        // Загрузка 3D модели
-        const container = document.getElementById('model-container');
-        const loading = document.querySelector('.loading');
-        
-        const iframe = document.createElement('iframe');
-        iframe.title = "ANIME - Hana";
-        iframe.allow = "autoplay; fullscreen; xr-spatial-tracking; gyroscope; accelerometer";
-        iframe.allowfullscreen = true;
-        iframe.mozallowfullscreen = true;
-        iframe.webkitallowfullscreen = true;
-        
-        // Параметры для максимальной производительности и чистого вида
-        const modelId = "23b3b5d1c1d54783bf189da609ffcace";
-        const params = new URLSearchParams({
-            ui_controls: 0,           // без UI контролов
-            ui_infos: 0,             // без информационной панели
-            ui_stop: 0,              // без кнопки остановки
-            ui_inspector: 0,         // без инспектора
-            ui_watermark: 0,         // без водяных знаков
-            ui_help: 0,              // без кнопки помощи
-            ui_settings: 0,          // без настроек
-            ui_annotations: 0,       // без аннотаций
-            ui_color: '000000',      // черный UI
-            autostart: 1,            // автозапуск
-            preload: 1,              // предзагрузка
-            camera: 0,               // начальная камера
-            transparent: 0,          // не прозрачный фон
-            autospin: 0,             // без авто-вращения
-            scrollwheel: 0,          // без скролла колесиком
-            annotation_tooltip: 0,   // без подсказок
-            annotations_visible: 0,  // аннотации скрыты
-            orbit_constraint_pan: 1, // разрешить панорамирование
-            orbit_constraint_zoom: 1, // разрешить зум
-            orbit_constraint_rotate: 1 // разрешить вращение
-        });
-        
-        iframe.src = `https://sketchfab.com/models/${modelId}/embed?${params.toString()}`;
-        
-        iframe.onload = function() {
-            loading.style.display = 'none';
+    <!-- Анимация приветствия -->
+    <div id="telegram-welcome" class="telegram-welcome">
+        <div class="welcome-content">
+            <div class="welcome-avatar">
+                <img id="welcome-avatar" src="" alt="Аватар">
+            </div>
+            <div class="welcome-name" id="welcome-name"></div>
+            <div class="welcome-id" id="welcome-id"></div>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <main id="main-content">
+        <!-- Главная страница -->
+        <section id="home-page" class="page active">
+            <div class="main-content-order">
+                <div class="upcoming-fights">
+                    <h2><i class="fas fa-fist-raised"></i> Предстоящие бои</h2>
+                    <div class="fights-list"></div>
+                </div>
+                
+                <div class="news-section">
+                    <h2><i class="fas fa-newspaper"></i> Последние новости</h2>
+                    <div class="news-grid">
+                        <div class="news-card">
+                            <div class="news-date">12.11.2024</div>
+                            <h3>Новый турнир объявлен!</h3>
+                            <p>Стартует зимний чемпионат по школьному EFC™. Регистрация до 30 ноября.</p>
+                        </div>
+                        <div class="news-card">
+                            <div class="news-date">10.11.2024</div>
+                            <h3>Иванов защитил титул</h3>
+                            <p>В прошедшие выходные состоялся главный бой сезона.</p>
+                        </div>
+                        <div class="news-card">
+                            <div class="news-date">05.11.2024</div>
+                            <h3>Набор в секцию хостинга</h3>
+                            <p>Тренер Ислям Нариманович начинает новый набор группы по хостингу.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Страница архив боев -->
+        <section id="videos-page" class="page">
+            <div class="videos-container">
+                <h2><i class="fas fa-video"></i> Архив боев</h2>
+                <div class="videos-grid"></div>
+            </div>
+        </section>
+
+        <!-- Страница бойцов -->
+        <section id="fighters-page" class="page">
+            <div class="fighters-page">
+                <h2><i class="fas fa-users"></i> Все бойцы EFC™</h2>
+                
+                <div class="fighters-filter">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-category="all">Все</button>
+                        <button class="filter-btn" data-category="no_category">Вне категорий</button>
+                        <button class="filter-btn" data-category="light">Легкий вес</button>
+                        <button class="filter-btn" data-category="middle">Средний вес</button>
+                        <button class="filter-btn" data-category="mma">MMA</button>
+                        <button class="filter-btn" data-category="boxing">Бокс</button>
+                        <button class="filter-btn" data-category="hosting">Хостинг</button>
+                        <button class="filter-btn" data-category="wrestling">Борьба</button>
+                    </div>
+                </div>
+                
+                <div class="fighters-container" id="fighters-container">
+                    <!-- Бойцы загружаются через JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Страница профиля -->
+        <section id="profile-page" class="page">
+            <div class="profile-container">
+                <!-- Данные пользователя -->
+                <div class="profile-header">
+                    <div class="avatar-container">
+                        <img id="user-avatar" src="" alt="Аватар" class="avatar">
+                    </div>
+                    <h2 id="user-name">Загрузка...</h2>
+                    <p id="user-id" class="status">ID: ...</p>
+                </div>
+
+                <!-- Кнопки профиля -->
+                <div class="profile-actions">
+                    <button class="profile-btn" id="my-tickets-btn">
+                        <div class="btn-icon">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title">Мои билеты</span>
+                            <span class="btn-subtitle">Купленные билеты на бои</span>
+                        </div>
+                    </button>
+
+                    <button class="profile-btn" id="bets-btn" style="display: none;">
+                        <div class="btn-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title">Ставки</span>
+                            <span class="btn-subtitle">Ставки на бои (18+)</span>
+                        </div>
+                    </button>
+
+                    <button class="profile-btn" id="my-fights-btn">
+                        <div class="btn-icon">
+                            <i class="fas fa-fist-raised"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title">Мои бои</span>
+                            <span class="btn-subtitle">Расписание и гонорары</span>
+                        </div>
+                    </button>
+
+                    <button class="profile-btn" id="contract-btn">
+                        <div class="btn-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title" id="contract-btn-title">Моя анкета</span>
+                            <span class="btn-subtitle" id="contract-btn-subtitle">Заполнить анкету для участия</span>
+                        </div>
+                    </button>
+
+                    <button class="profile-btn" id="agreement-btn">
+                        <div class="btn-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title">Пользовательское соглашение</span>
+                            <span class="btn-subtitle">Правила использования</span>
+                        </div>
+                    </button>
+
+                    <button class="profile-btn" id="support-btn">
+                        <div class="btn-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title">Техподдержка</span>
+                            <span class="btn-subtitle">@EDEM_CR</span>
+                        </div>
+                    </button>
+
+                    <!-- Кнопка админ панели (показывается только админам) -->
+                    <button class="profile-btn" id="admin-btn" style="display: none;">
+                        <div class="btn-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title">ADMIN PANEL</span>
+                            <span class="btn-subtitle">Панель администратора</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальные окна -->
+    
+    <!-- Модалка билетов -->
+    <div id="tickets-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-ticket-alt"></i> Мои билеты</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="tickets-list" class="tickets-list"></div>
+                <div class="tickets-actions">
+                    <button class="btn-primary" id="clear-tickets-btn">
+                        <i class="fas fa-trash"></i> Очистить все билеты
+                    </button>
+                    <button class="btn-secondary modal-close">
+                        <i class="fas fa-times"></i> Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка анкеты -->
+    <div id="application-modal" class="modal">
+        <div class="modal-content application-form"></div>
+    </div>
+
+    <!-- Модалка контракта -->
+    <div id="contract-modal" class="modal">
+        <div class="modal-content contract-container"></div>
+    </div>
+
+    <!-- Модалка админ панели -->
+    <div id="admin-modal" class="modal">
+        <div class="modal-content admin-panel"></div>
+    </div>
+
+    <!-- Навигация -->
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <button class="nav-btn active" data-page="home">
+                <i class="fas fa-home"></i>
+            </button>
+            <div class="nav-divider"></div>
             
-            // Отправляем сообщение для скрытия всех UI элементов
-            setTimeout(() => {
-                iframe.contentWindow.postMessage({
-                    type: 'viewerSetParameter',
-                    parameter: 'ui_controls',
-                    value: 0
-                }, '*');
-            }, 1000);
-        };
-        
-        container.appendChild(iframe);
-        
-        // Обработчик для полноэкранного режима при двойном тапе
-        let lastTap = 0;
-        container.addEventListener('touchend', function(e) {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
+            <button class="nav-btn" data-page="videos">
+                <i class="fas fa-video"></i>
+            </button>
+            <div class="nav-divider"></div>
             
-            if (tapLength < 300 && tapLength > 0) {
-                // Двойной тап - переключение полноэкранного режима
-                if (!document.fullscreenElement) {
-                    container.requestFullscreen().catch(err => {
-                        console.log('Ошибка полноэкранного режима:', err);
-                    });
-                } else {
-                    document.exitFullscreen();
-                }
-            }
-            lastTap = currentTime;
-        });
-        
-        // Скрываем кнопку "Назад" в Telegram
-        tg.BackButton.hide();
-    </script>
+            <button class="nav-btn" data-page="fighters">
+                <i class="fas fa-users"></i>
+            </button>
+            <div class="nav-divider"></div>
+            
+            <button class="nav-btn" data-page="profile">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Загрузчик -->
+    <div id="loader" class="loader">
+        <div class="spinner"></div>
+        <div class="loader-text">Загрузка EFC™...</div>
+    </div>
+
+    <script src="telegram-auth.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
