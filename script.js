@@ -4,6 +4,7 @@ let activeFilters = {
     weight: [],
     sport: []
 };
+let bannerInterval;
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', function() {
@@ -67,25 +68,54 @@ function loadBanners() {
     const activeBanners = APP_CONFIG.banners.filter(banner => banner.active);
     if (activeBanners.length === 0) return;
     
-    // Показываем только первый активный баннер
-    const banner = activeBanners[0];
-    const bannerElement = document.createElement('div');
-    bannerElement.className = 'banner';
-    bannerElement.innerHTML = `
-        <img src="${banner.imageUrl}" alt="Баннер" 
-             onerror="this.src='https://via.placeholder.com/800x400/333/fff?text=EFC+Баннер'">
-    `;
-    
-    if (banner.link && banner.link !== '#') {
-        bannerElement.addEventListener('click', () => {
-            if (banner.link.startsWith('http')) {
-                window.open(banner.link, '_blank');
-            }
-        });
-    }
-    
     container.innerHTML = '';
-    container.appendChild(bannerElement);
+    
+    // Создаем слайды для каждого баннера
+    activeBanners.forEach((banner, index) => {
+        const bannerSlide = document.createElement('div');
+        bannerSlide.className = `banner-slide ${index === 0 ? 'active' : ''}`;
+        bannerSlide.innerHTML = `
+            <img src="${banner.imageUrl}" alt="Баннер" 
+                 onerror="this.src='https://via.placeholder.com/800x400/333/fff?text=EFC+Баннер'">
+        `;
+        
+        if (banner.link && banner.link !== '#') {
+            bannerSlide.addEventListener('click', () => {
+                if (banner.link.startsWith('http')) {
+                    window.open(banner.link, '_blank');
+                }
+            });
+        }
+        
+        container.appendChild(bannerSlide);
+    });
+    
+    // Запускаем карусель если баннеров больше одного
+    if (activeBanners.length > 1) {
+        startBannerCarousel();
+    }
+}
+
+function startBannerCarousel() {
+    const slides = document.querySelectorAll('.banner-slide');
+    if (slides.length <= 1) return;
+    
+    let currentSlide = 0;
+    
+    // Очищаем предыдущий интервал если есть
+    if (bannerInterval) clearInterval(bannerInterval);
+    
+    bannerInterval = setInterval(() => {
+        // Скрываем текущий слайд
+        slides[currentSlide].classList.remove('active');
+        
+        // Увеличиваем индекс слайда
+        currentSlide = (currentSlide + 1) % slides.length;
+        
+        // Показываем следующий слайд
+        slides[currentSlide].classList.add('active');
+        
+    }, 15000); // 15 секунд
 }
 
 function loadUpcomingFights() {
@@ -94,9 +124,10 @@ function loadUpcomingFights() {
     
     container.innerHTML = '';
     
-    APP_CONFIG.upcomingFights.forEach(fight => {
+    APP_CONFIG.upcomingFights.forEach((fight, index) => {
         const fightCard = document.createElement('div');
         fightCard.className = 'fight-card';
+        fightCard.style.animationDelay = `${index * 0.1}s`;
         fightCard.innerHTML = `
             <h3>${fight.fighters.join(' vs ')}</h3>
             <p><i class="far fa-calendar"></i> ${fight.date} ${fight.time}</p>
@@ -116,9 +147,10 @@ function loadFightArchive() {
     
     container.innerHTML = '';
     
-    APP_CONFIG.fightArchive.forEach(video => {
+    APP_CONFIG.fightArchive.forEach((video, index) => {
         const videoCard = document.createElement('div');
         videoCard.className = 'video-card';
+        videoCard.style.animationDelay = `${index * 0.1}s`;
         
         videoCard.innerHTML = `
             <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail" 
@@ -144,6 +176,8 @@ function loadFighters() {
     
     container.innerHTML = '';
     
+    let fighterIndex = 0;
+    
     // Сначала бойцы вне категорий
     if (APP_CONFIG.fighters.no_category) {
         APP_CONFIG.fighters.no_category.forEach(fighter => {
@@ -151,7 +185,9 @@ function loadFighters() {
             card.dataset.category = 'no_category';
             card.dataset.weight = fighter.weight_class.toLowerCase().replace(' ', '_');
             card.dataset.sport = fighter.sport.toLowerCase();
+            card.style.animationDelay = `${fighterIndex * 0.05}s`;
             container.appendChild(card);
+            fighterIndex++;
         });
     }
     
@@ -165,7 +201,9 @@ function loadFighters() {
                     card.dataset.category = category.id;
                     card.dataset.weight = category.id;
                     card.dataset.sport = fighter.sport.toLowerCase();
+                    card.style.animationDelay = `${fighterIndex * 0.05}s`;
                     container.appendChild(card);
+                    fighterIndex++;
                 });
             });
         }
@@ -178,7 +216,9 @@ function loadFighters() {
                     card.dataset.category = category.id;
                     card.dataset.weight = fighter.weight_class.toLowerCase().replace(' ', '_');
                     card.dataset.sport = category.id;
+                    card.style.animationDelay = `${fighterIndex * 0.05}s`;
                     container.appendChild(card);
+                    fighterIndex++;
                 });
             });
         }
@@ -229,7 +269,17 @@ function updateProfileDisplay() {
         const userAvatar = document.getElementById('user-avatar');
         
         if (userName) {
-            userName.textContent = auth.getUserName();
+            // Очищаем контейнер имени
+            userName.innerHTML = '';
+            
+            // Создаем контейнер для имени и значка
+            const nameContainer = document.createElement('div');
+            nameContainer.className = 'user-name-container';
+            
+            // Текст с именем
+            const nameText = document.createElement('span');
+            nameText.textContent = auth.getUserName();
+            nameContainer.appendChild(nameText);
             
             // Добавляем значок
             const userIdNum = parseInt(auth.getUserId());
@@ -244,14 +294,6 @@ function updateProfileDisplay() {
             }
             
             if (badgeType) {
-                // Удаляем старый значок если есть
-                const oldBadge = document.getElementById('user-profile-badge');
-                if (oldBadge) oldBadge.remove();
-                
-                const badgeContainer = document.createElement('div');
-                badgeContainer.id = 'user-profile-badge';
-                badgeContainer.className = 'user-badge-container';
-                
                 const badge = document.createElement('div');
                 badge.className = `user-badge badge-${badgeType}`;
                 
@@ -269,14 +311,11 @@ function updateProfileDisplay() {
                 }
                 
                 badge.innerHTML = icon;
-                badgeContainer.appendChild(badge);
-                
-                // Добавляем рядом с аватаркой
-                const avatarContainer = document.querySelector('.avatar-container');
-                if (avatarContainer) {
-                    avatarContainer.appendChild(badgeContainer);
-                }
+                nameContainer.appendChild(badge);
             }
+            
+            // Вставляем контейнер в элемент имени
+            userName.appendChild(nameContainer);
         }
         
         if (userId) {
@@ -300,17 +339,23 @@ function setupProfileButtons() {
     const userIdNum = parseInt(userId);
     
     // Мои билеты
-    document.getElementById('my-tickets-btn').addEventListener('click', function() {
-        showMyTickets();
+    document.getElementById('my-tickets-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            showMyTickets();
+        }, 200);
     });
     
     // Мои бои - с проверкой контракта
-    document.getElementById('my-fights-btn').addEventListener('click', function() {
-        if (APP_CONFIG.contracts[userId] || APP_CONFIG.admins.includes(userIdNum) || APP_CONFIG.trainers.includes(userIdNum)) {
-            showMyFightsModal();
-        } else {
-            showNotification('У вас не подписан контракт для участия в боях');
-        }
+    document.getElementById('my-fights-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            if (APP_CONFIG.contracts[userId] || APP_CONFIG.admins.includes(userIdNum) || APP_CONFIG.trainers.includes(userIdNum)) {
+                showMyFightsModal();
+            } else {
+                showNotification('У вас не подписан контракт для участия в боях');
+            }
+        }, 200);
     });
     
     // Анкета/Контракт
@@ -320,24 +365,36 @@ function setupProfileButtons() {
             document.getElementById('contract-btn-title').textContent = 'Мой контракт';
             document.getElementById('contract-btn-subtitle').textContent = 'Просмотреть контракт';
             
-            contractBtn.addEventListener('click', function() {
-                window.open(APP_CONFIG.contracts[userId], '_blank');
+            contractBtn.addEventListener('click', function(e) {
+                animateButtonClick(e.target);
+                setTimeout(() => {
+                    window.open(APP_CONFIG.contracts[userId], '_blank');
+                }, 200);
             });
         } else {
-            contractBtn.addEventListener('click', function() {
-                showApplicationForm();
+            contractBtn.addEventListener('click', function(e) {
+                animateButtonClick(e.target);
+                setTimeout(() => {
+                    showApplicationForm();
+                }, 200);
             });
         }
     }
     
     // Пользовательское соглашение
-    document.getElementById('agreement-btn').addEventListener('click', function() {
-        window.open(APP_CONFIG.agreementUrl, '_blank');
+    document.getElementById('agreement-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            window.open(APP_CONFIG.agreementUrl, '_blank');
+        }, 200);
     });
     
     // Техподдержка
-    document.getElementById('support-btn').addEventListener('click', function() {
-        window.open(APP_CONFIG.supportUrl, '_blank');
+    document.getElementById('support-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            window.open(APP_CONFIG.supportUrl, '_blank');
+        }, 200);
     });
     
     // Админ панель
@@ -345,8 +402,11 @@ function setupProfileButtons() {
     if (adminBtn) {
         if (APP_CONFIG.admins.includes(userIdNum)) {
             adminBtn.style.display = 'flex';
-            adminBtn.addEventListener('click', function() {
-                showAdminPanel();
+            adminBtn.addEventListener('click', function(e) {
+                animateButtonClick(e.target);
+                setTimeout(() => {
+                    showAdminPanel();
+                }, 200);
             });
         } else {
             adminBtn.style.display = 'none';
@@ -354,9 +414,16 @@ function setupProfileButtons() {
     }
 }
 
+function animateButtonClick(button) {
+    button.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        button.style.transform = '';
+    }, 150);
+}
+
 function showMyTickets() {
     const modal = document.createElement('div');
-    modal.className = 'modal active';
+    modal.className = 'modal';
     
     const tickets = JSON.parse(localStorage.getItem('efc_tickets') || '[]');
     
@@ -365,7 +432,7 @@ function showMyTickets() {
         ticketsHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">Билетов пока нет</p>';
     } else {
         ticketsHTML = tickets.map(ticket => `
-            <div style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px;">
+            <div style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; animation: slideUp 0.5s ease-out;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                     <strong style="color: white;">${ticket.fighters || 'Бой'}</strong>
                     <span style="color: #FF6B6B; font-weight: bold;">${ticket.price || 0} руб.</span>
@@ -397,25 +464,33 @@ function showMyTickets() {
     
     document.body.appendChild(modal);
     
+    // Показываем модалку с анимацией
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+    
     // Очистка билетов
-    modal.querySelector('#clear-tickets-btn').addEventListener('click', function() {
-        if (confirm('Удалить все билеты?')) {
-            localStorage.removeItem('efc_tickets');
-            modal.remove();
-            showNotification('Билеты удалены');
-        }
+    modal.querySelector('#clear-tickets-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            if (confirm('Удалить все билеты?')) {
+                localStorage.removeItem('efc_tickets');
+                closeModal(modal);
+                showNotification('Билеты удалены');
+            }
+        }, 200);
     });
     
     // Закрытие модалки
-    modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
+    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
+        if (e.target === modal) closeModal(modal);
     });
 }
 
 function showMyFightsModal() {
     const modal = document.createElement('div');
-    modal.className = 'modal active';
+    modal.className = 'modal';
     
     const userId = window.TelegramAuth.getUserId();
     const fights = APP_CONFIG.userFights[userId] || [];
@@ -430,7 +505,7 @@ function showMyFightsModal() {
         `;
     } else {
         fightsHTML = '<div class="fights-list-container">';
-        fights.forEach(fight => {
+        fights.forEach((fight, index) => {
             let statusText = '';
             let statusClass = '';
             
@@ -446,7 +521,7 @@ function showMyFightsModal() {
             }
             
             fightsHTML += `
-                <div class="fight-item">
+                <div class="fight-item" style="animation-delay: ${index * 0.1}s">
                     <h3>Против: ${fight.opponent}</h3>
                     <div class="fight-details">
                         <i class="far fa-calendar"></i>
@@ -486,17 +561,22 @@ function showMyFightsModal() {
     
     document.body.appendChild(modal);
     
+    // Показываем модалку с анимацией
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+    
     // Закрытие модалки
-    modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
-    modal.querySelector('#close-fights-btn').addEventListener('click', () => modal.remove());
+    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
+    modal.querySelector('#close-fights-btn').addEventListener('click', () => closeModal(modal));
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
+        if (e.target === modal) closeModal(modal);
     });
 }
 
 function showApplicationForm() {
     const modal = document.createElement('div');
-    modal.className = 'modal active';
+    modal.className = 'modal';
     
     modal.innerHTML = `
         <div class="modal-content">
@@ -560,38 +640,46 @@ function showApplicationForm() {
     
     document.body.appendChild(modal);
     
+    // Показываем модалку с анимацией
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+    
     // Обработчики
-    modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
-    modal.querySelector('#close-form-btn').addEventListener('click', () => modal.remove());
+    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
+    modal.querySelector('#close-form-btn').addEventListener('click', () => closeModal(modal));
     
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
+        if (e.target === modal) closeModal(modal);
     });
     
     // Отправка анкеты
-    modal.querySelector('#submit-application-btn').addEventListener('click', function() {
-        const fullName = document.getElementById('app-fullname').value;
-        const birthDate = document.getElementById('app-birthdate').value;
-        const contact = document.getElementById('app-contact').value;
-        
-        if (!fullName || !birthDate || !contact) {
-            alert('Заполните обязательные поля!');
-            return;
-        }
-        
-        const message = `📋 НОВАЯ АНКЕТА EFC™\n\n👤 ${fullName}\n📅 ${birthDate}\n📞 ${contact}`;
-        const encodedMessage = encodeURIComponent(message);
-        const telegramUrl = `https://t.me/EDEM_CR?text=${encodedMessage}`;
-        
-        window.open(telegramUrl, '_blank');
-        modal.remove();
-        showNotification('✅ Анкета сформирована! Откройте Telegram для отправки.');
+    modal.querySelector('#submit-application-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            const fullName = document.getElementById('app-fullname').value;
+            const birthDate = document.getElementById('app-birthdate').value;
+            const contact = document.getElementById('app-contact').value;
+            
+            if (!fullName || !birthDate || !contact) {
+                alert('Заполните обязательные поля!');
+                return;
+            }
+            
+            const message = `📋 НОВАЯ АНКЕТА EFC™\n\n👤 ${fullName}\n📅 ${birthDate}\n📞 ${contact}`;
+            const encodedMessage = encodeURIComponent(message);
+            const telegramUrl = `https://t.me/EDEM_CR?text=${encodedMessage}`;
+            
+            window.open(telegramUrl, '_blank');
+            closeModal(modal);
+            showNotification('✅ Анкета сформирована! Откройте Telegram для отправки.');
+        }, 200);
     });
 }
 
 function showAdminPanel() {
     const modal = document.createElement('div');
-    modal.className = 'modal active';
+    modal.className = 'modal';
     
     const tickets = JSON.parse(localStorage.getItem('efc_tickets') || '[]');
     const applications = JSON.parse(localStorage.getItem('efc_applications') || '[]');
@@ -631,30 +719,51 @@ function showAdminPanel() {
     
     document.body.appendChild(modal);
     
+    // Показываем модалку с анимацией
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+    
     // Очистка данных
-    modal.querySelector('#clear-all-data-btn').addEventListener('click', function() {
-        if (confirm('УДАЛИТЬ ВСЕ ДАННЫЕ?\n\nВсе билеты и анкеты будут удалены.')) {
-            localStorage.clear();
-            modal.remove();
-            showNotification('Все данные удалены');
-        }
+    modal.querySelector('#clear-all-data-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            if (confirm('УДАЛИТЬ ВСЕ ДАННЫЕ?\n\nВсе билеты и анкеты будут удалены.')) {
+                localStorage.clear();
+                closeModal(modal);
+                showNotification('Все данные удалены');
+            }
+        }, 200);
     });
     
-    modal.querySelector('#close-admin-btn').addEventListener('click', function() {
-        modal.remove();
+    modal.querySelector('#close-admin-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            closeModal(modal);
+        }, 200);
     });
     
     // Закрытие модалки
-    modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
+    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
+        if (e.target === modal) closeModal(modal);
     });
+}
+
+function closeModal(modal) {
+    modal.classList.remove('active');
+    setTimeout(() => {
+        if (modal.parentNode) {
+            modal.parentNode.removeChild(modal);
+        }
+    }, 300);
 }
 
 function setupEventListeners() {
     // Навигация
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function(e) {
+            animateButtonClick(e.currentTarget);
             const page = this.getAttribute('data-page');
             
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -666,21 +775,50 @@ function setupEventListeners() {
     // Покупка билетов
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('buy-ticket-btn')) {
+            animateButtonClick(e.target);
             const fightId = e.target.getAttribute('data-fight-id');
-            buyTicket(fightId);
+            setTimeout(() => {
+                buyTicket(fightId);
+            }, 200);
         }
     });
     
     // Кнопка фильтра на странице бойцов
     const filterBtn = document.getElementById('open-filter-modal-btn');
     if (filterBtn) {
-        filterBtn.addEventListener('click', showFilterModal);
+        filterBtn.addEventListener('click', function(e) {
+            animateButtonClick(e.target);
+            setTimeout(() => {
+                showFilterModal();
+            }, 200);
+        });
     }
+    
+    // Анимация при нажатии на кнопки
+    document.addEventListener('mousedown', function(e) {
+        if (e.target.classList.contains('btn-primary') || 
+            e.target.classList.contains('btn-secondary') ||
+            e.target.classList.contains('profile-btn') ||
+            e.target.classList.contains('filter-btn-main') ||
+            e.target.classList.contains('nav-btn')) {
+            e.target.style.transform = 'scale(0.95)';
+        }
+    });
+    
+    document.addEventListener('mouseup', function(e) {
+        if (e.target.classList.contains('btn-primary') || 
+            e.target.classList.contains('btn-secondary') ||
+            e.target.classList.contains('profile-btn') ||
+            e.target.classList.contains('filter-btn-main') ||
+            e.target.classList.contains('nav-btn')) {
+            e.target.style.transform = '';
+        }
+    });
 }
 
 function showFilterModal() {
     const modal = document.createElement('div');
-    modal.className = 'modal active';
+    modal.className = 'modal';
     
     modal.innerHTML = `
         <div class="modal-content">
@@ -747,6 +885,11 @@ function showFilterModal() {
     
     document.body.appendChild(modal);
     
+    // Показываем модалку с анимацией
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+    
     // Обработчики чекбоксов
     modal.querySelectorAll('.filter-option').forEach(option => {
         option.addEventListener('click', function(e) {
@@ -754,50 +897,62 @@ function showFilterModal() {
                 const checkbox = this.querySelector('input[type="checkbox"]');
                 checkbox.checked = !checkbox.checked;
                 this.classList.toggle('active');
+                
+                // Анимация нажатия
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
             }
         });
     });
     
     // Применить фильтры
-    modal.querySelector('#apply-filters-btn').addEventListener('click', function() {
-        const selectedWeights = [];
-        const selectedSports = [];
-        
-        modal.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-            if (checkbox.id.startsWith('weight-')) {
-                selectedWeights.push(checkbox.id.replace('weight-', ''));
-            } else if (checkbox.id.startsWith('sport-')) {
-                selectedSports.push(checkbox.id.replace('sport-', ''));
-            }
-        });
-        
-        activeFilters.weight = selectedWeights;
-        activeFilters.sport = selectedSports;
-        
-        applyFiltersToFighters();
-        modal.remove();
+    modal.querySelector('#apply-filters-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            const selectedWeights = [];
+            const selectedSports = [];
+            
+            modal.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                if (checkbox.id.startsWith('weight-')) {
+                    selectedWeights.push(checkbox.id.replace('weight-', ''));
+                } else if (checkbox.id.startsWith('sport-')) {
+                    selectedSports.push(checkbox.id.replace('sport-', ''));
+                }
+            });
+            
+            activeFilters.weight = selectedWeights;
+            activeFilters.sport = selectedSports;
+            
+            applyFiltersToFighters();
+            closeModal(modal);
+        }, 200);
     });
     
     // Сбросить фильтры
-    modal.querySelector('#reset-filters-btn').addEventListener('click', function() {
-        activeFilters.weight = [];
-        activeFilters.sport = [];
-        
-        modal.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        
-        modal.querySelectorAll('.filter-option').forEach(option => {
-            option.classList.remove('active');
-        });
-        
-        applyFiltersToFighters();
+    modal.querySelector('#reset-filters-btn').addEventListener('click', function(e) {
+        animateButtonClick(e.target);
+        setTimeout(() => {
+            activeFilters.weight = [];
+            activeFilters.sport = [];
+            
+            modal.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            modal.querySelectorAll('.filter-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            applyFiltersToFighters();
+        }, 200);
     });
     
     // Закрытие модалки
-    modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
+    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
+        if (e.target === modal) closeModal(modal);
     });
 }
 
@@ -813,6 +968,7 @@ function applyFiltersToFighters() {
         
         if (weightMatch && sportMatch) {
             fighter.style.display = 'flex';
+            fighter.style.animation = 'slideUp 0.5s ease-out';
         } else {
             fighter.style.display = 'none';
         }
@@ -848,19 +1004,19 @@ function buyTicket(fightId) {
 function switchPage(page) {
     document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
-        p.style.display = 'none';
     });
     
     const targetPage = document.getElementById(`${page}-page`);
     if (targetPage) {
-        targetPage.style.display = 'block';
-        setTimeout(() => targetPage.classList.add('active'), 10);
+        targetPage.classList.add('active');
     }
     
     currentPage = page;
     
     if (page === 'fighters') {
-        loadFighters();
+        setTimeout(() => {
+            loadFighters();
+        }, 300);
     }
 }
 
