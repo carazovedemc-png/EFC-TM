@@ -23,7 +23,7 @@ const APP_CONFIG = {
     // КОНТРАКТЫ БОЙЦОВ
     // Telegram ID: ссылка на контракт
     contracts: {
-        1745639675: "https://example.com/contract.jpg", // Ваш контракт
+        1745639675: "https://telegra.ph/CONTRACT-01-11-5", // Ваш контракт
     },
     
     // БОИ БОЙЦОВ
