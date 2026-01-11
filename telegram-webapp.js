@@ -57,7 +57,7 @@ class TelegramWebAppHandler {
         
         this.headerHeight = height;
         
-        // Устанавливаем CSS переменную
+        // Устанавливаем CSS переменную для отступа сверху
         document.documentElement.style.setProperty('--telegram-header-height', `${height}px`);
         
         console.log('Telegram header height set to:', height);

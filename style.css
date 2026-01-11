@@ -69,15 +69,21 @@ body {
     font-size: 1.2rem;
 }
 
-/* Хедер - СМЕЩЁН НИЖЕ */
+/* Telegram Web App Header Space */
+.telegram-webapp-header {
+    height: var(--telegram-header-height, 20px);
+    width: 100%;
+}
+
+/* ВЕРХНЯЯ ПАНЕЛЬ - ИСПРАВЛЕНА (матовый чёрный фон, размытие, правильные отступы) */
 .glass-header {
-    background: rgba(15, 15, 30, 0.95);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(0, 0, 0, 0.85); /* Матовый чёрный */
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
     border: 1px solid rgba(255, 255, 255, 0.15);
     padding: 8px 20px;
     position: fixed;
-    top: 15px; /* Смещено ниже */
+    top: 35px; /* Опущена ниже */
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
@@ -88,7 +94,7 @@ body {
     max-width: 450px;
     border-radius: 15px;
     margin: 0 auto;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 .header-content {
@@ -182,11 +188,11 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Основной контент */
+/* Основной контент - УВЕЛИЧЕН ОТСТУП СВЕРХУ И СНИЗУ */
 main {
     padding: 15px;
-    padding-top: 85px; /* Увеличен отступ сверху */
-    padding-bottom: 80px;
+    padding-top: 110px; /* Увеличен отступ сверху (было 85px) */
+    padding-bottom: 90px; /* Увеличен отступ снизу (было 80px) */
     min-height: 100vh;
 }
 
@@ -735,7 +741,7 @@ main {
     align-items: flex-start;
     z-index: 10002;
     padding: 20px;
-    padding-top: 80px; /* Учитываем верхнюю панель */
+    padding-top: 100px; /* Увеличен отступ сверху */
     opacity: 0;
     transition: opacity 0.3s;
     overflow-y: auto;
@@ -763,7 +769,7 @@ main {
     border-radius: 15px;
     width: 100%;
     max-width: 450px;
-    max-height: calc(85vh - 80px);
+    max-height: calc(85vh - 100px);
     overflow-y: auto;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transform: translateY(20px);
@@ -971,7 +977,7 @@ main {
     font-size: 1rem;
 }
 
-/* Навигация */
+/* НИЖНЯЯ НАВИГАЦИЯ (не трогаем!) */
 .glass-nav {
     position: fixed;
     bottom: 10px;
@@ -1059,7 +1065,7 @@ main {
 /* Уведомления */
 .notification {
     position: fixed;
-    top: 90px; /* Под верхней панелью */
+    top: 110px; /* Под новой верхней панелью */
     right: -400px;
     background: rgba(15, 15, 30, 0.95);
     border: 1px solid rgba(255, 107, 107, 0.3);
@@ -1181,7 +1187,7 @@ main {
     .glass-header {
         padding: 5px 15px;
         width: calc(100% - 30px);
-        top: 15px;
+        top: 30px;
     }
     
     .app-title {
@@ -1214,7 +1220,12 @@ main {
     
     .notification {
         max-width: calc(100% - 30px);
-        top: 85px;
+        top: 105px;
+    }
+    
+    main {
+        padding-top: 105px;
+        padding-bottom: 85px;
     }
 }
 
@@ -1236,6 +1247,6 @@ main {
     }
     
     .notification {
-        top: 90px;
+        top: 110px;
     }
 }
