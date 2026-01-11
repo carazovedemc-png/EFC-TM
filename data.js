@@ -42,20 +42,20 @@ const APP_CONFIG = {
         1745639675: [
             {
                 id: 1,
-                opponent: "Иван Иванов",
-                date: "15.12.2024",
-                time: "18:00",
-                place: "Школьный спортзал №1",
-                reward: 5000,
+                opponent: "Рестем Гильманов",
+                date: "20.1.2026",
+                time: "16:30",
+                place: "Школьный спортзал",
+                reward: 500,
                 status: "upcoming" // upcoming, completed, cancelled
             },
             {
                 id: 2,
-                opponent: "Алексей Сидоров",
-                date: "20.12.2024",
-                time: "19:00",
-                place: "Школьный спортзал №2",
-                reward: 7500,
+                opponent: "Джемодинов Демирель",
+                date: "14.12.2026",
+                time: "16:30",
+                place: "Школьный спортзал",
+                reward: 500,
                 status: "completed"
             }
         ]
@@ -69,7 +69,7 @@ const APP_CONFIG = {
                 id: 1,
                 name: "Ислам Махачев",
                 rank: "#1 ВНЕ КАТЕГОРИЙ",
-                record: "21-1-0", // победы-поражения-ничьи
+                record: "28-1-0", // победы-поражения-ничьи
                 photo: "https://sun9-71.userapi.com/s/v1/ig2/OLD1CSZwWQALul3lvE2a-dgxNsysn5aIHru7ruY884BOBPV9Rv9CN_3yCKRcYC2BhVZtR8I5unnuKIud7zKR1hA2.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,888x888&from=bu&u=TKhlpm8D_0mKDvxJqPds49m33by4h7CaRKlR59TqBX0&cs=640x0",
                 sport: "MMA",
                 weight_class: "Тяжелый вес",
