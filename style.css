@@ -5,6 +5,7 @@
     --card-bg: rgba(255, 255, 255, 0.05);
     --text-primary: #ffffff;
     --text-secondary: rgba(255, 255, 255, 0.7);
+    --telegram-header-height: 0px;
 }
 
 * {
@@ -69,24 +70,35 @@ body {
     font-size: 1.2rem;
 }
 
-/* Хедер - СДЕЛАН ПРОЗРАЧНЫМ И ПОСЕРЕДИНЕ */
+/* Телеграм Web App кнопки */
+.telegram-webapp-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--telegram-header-height, 0px);
+    background: transparent;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+/* Хедер - ПОДВЕШЕН К КНОПКАМ TELEGRAM */
 .glass-header {
-    background: rgba(15, 15, 30, 0.6);
+    background: rgba(15, 15, 30, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     padding: 5px 20px;
-    position: sticky;
-    top: 10px;
-    z-index: 100;
+    position: fixed;
+    top: var(--telegram-header-height, 0px);
+    left: 0;
+    z-index: 9999;
     height: 55px;
     display: flex;
     align-items: center;
-    margin: 0 auto;
-    width: calc(100% - 20px);
-    max-width: 450px;
-    border-radius: 15px;
-    margin-top: 10px;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .header-content {
@@ -96,6 +108,8 @@ body {
     width: 100%;
     justify-content: center;
     position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .logo-container {
@@ -180,10 +194,12 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Основной контент */
+/* Основной контент с отступом от верхней панели */
 main {
     padding: 15px;
-    padding-top: 20px;
+    padding-top: calc(var(--telegram-header-height, 0px) + 70px);
+    padding-bottom: 80px;
+    min-height: 100vh;
 }
 
 .page {
@@ -206,6 +222,7 @@ main {
     min-height: 150px;
     overflow: hidden;
     border-radius: 12px;
+    margin-top: 0;
 }
 
 .banner-slide {
@@ -215,7 +232,7 @@ main {
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 1.5s ease-in-out;
     border-radius: 12px;
     overflow: hidden;
 }
@@ -233,6 +250,20 @@ main {
 
 .banner-slide:hover img {
     transform: scale(1.05);
+}
+
+/* Анимация затемнения для баннеров */
+@keyframes bannerFade {
+    0%, 90% {
+        opacity: 1;
+    }
+    95%, 100% {
+        opacity: 0.3;
+    }
+}
+
+.banner-slide.fading {
+    animation: bannerFade 15s ease-in-out;
 }
 
 /* Карточки */
@@ -465,17 +496,46 @@ main {
     box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
 }
 
+/* Исправление анимации для плавной загрузки бойцов */
 .fighters-container {
     display: grid;
     gap: 12px;
-    animation: slideUp 0.5s ease-out 0.2s both;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.5s ease-out forwards;
 }
 
+@keyframes fightersAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Анимация для каждой карточки бойца */
 .fighter-card {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px;
+    animation: cardAppear 0.4s ease-out forwards;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+@keyframes cardAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fighter-photo {
@@ -693,23 +753,25 @@ main {
     font-size: 0.8rem;
 }
 
-/* Модальные окна с анимацией */
+/* Модальные окна с учетом Telegram кнопок */
 .modal {
     position: fixed;
-    top: 0;
+    top: var(--telegram-header-height, 0px);
     left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    height: calc(100% - var(--telegram-header-height, 0px));
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: none;
     justify-content: center;
-    align-items: center;
-    z-index: 1002;
-    padding: 15px;
+    align-items: flex-start;
+    z-index: 10002;
+    padding: 20px;
+    padding-top: calc(var(--telegram-header-height, 0px) + 20px);
     opacity: 0;
     transition: opacity 0.3s;
+    overflow-y: auto;
 }
 
 .modal.active {
@@ -734,11 +796,12 @@ main {
     border-radius: 15px;
     width: 100%;
     max-width: 450px;
-    max-height: 85vh;
+    max-height: calc(85vh - var(--telegram-header-height, 0px));
     overflow-y: auto;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transform: translateY(20px);
     transition: transform 0.3s;
+    margin-top: 0;
 }
 
 .modal.active .modal-content {
@@ -766,25 +829,9 @@ main {
     color: white;
 }
 
+/* Удаление кнопок закрытия в модальных окнах */
 .modal-close {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.5rem;
-    cursor: pointer;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.modal-close:hover {
-    background: rgba(255, 107, 107, 0.2);
-    color: var(--primary-color);
-    transform: rotate(90deg);
+    display: none !important;
 }
 
 .modal-body {
@@ -955,7 +1002,7 @@ main {
     font-size: 1rem;
 }
 
-/* Навигация - СДЕЛАН ПРОЗРАЧНЫМ */
+/* Навигация */
 .glass-nav {
     position: fixed;
     bottom: 10px;
@@ -966,7 +1013,7 @@ main {
     padding: 6px;
     z-index: 1000;
     border-radius: 15px;
-    background: rgba(15, 15, 30, 0.6);
+    background: rgba(15, 15, 30, 0.9);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -1043,7 +1090,7 @@ main {
 /* Уведомления - ПОД ВЕРХНЕЙ ПАНЕЛЬЮ */
 .notification {
     position: fixed;
-    top: 80px;
+    top: calc(var(--telegram-header-height, 0px) + 70px);
     right: -400px;
     background: rgba(15, 15, 30, 0.95);
     border: 1px solid rgba(255, 107, 107, 0.3);
@@ -1204,7 +1251,7 @@ main {
     
     .notification {
         max-width: calc(100% - 30px);
-        top: 80px;
+        top: calc(var(--telegram-header-height, 0px) + 70px);
     }
 }
 
@@ -1226,6 +1273,6 @@ main {
     }
     
     .notification {
-        top: 80px;
+        top: calc(var(--telegram-header-height, 0px) + 70px);
     }
 }

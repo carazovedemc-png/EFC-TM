@@ -141,17 +141,8 @@ class TelegramAuth {
             nameText.textContent = this.getUserName();
             nameEl.appendChild(nameText);
             
-            // Добавляем значок в приветствии
-            const userIdNum = parseInt(this.getUserId());
-            let badgeType = '';
-            
-            if (APP_CONFIG.admins.includes(userIdNum)) {
-                badgeType = 'admin';
-            } else if (APP_CONFIG.trainers.includes(userIdNum)) {
-                badgeType = 'trainer';
-            } else if (APP_CONFIG.contracts[this.getUserId()]) {
-                badgeType = 'fighter';
-            }
+            // Получаем приоритетный значок (админ > тренер > боец)
+            const badgeType = this.getPriorityBadgeType();
             
             if (badgeType) {
                 const badge = document.createElement('div');
@@ -160,12 +151,15 @@ class TelegramAuth {
                 let icon = '';
                 switch(badgeType) {
                     case 'admin':
-                        icon = '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2L4,5V11.09C4,16.14 7.41,20.85 12,22C16.59,20.85 20,16.14 20,11.09V5L12,2Z"/></svg>';
+                        // Галочка подтверждения (синий фон)
+                        icon = '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
                         break;
                     case 'fighter':
+                        // Кулак (красный фон)
                         icon = '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,5C13.66,5 15,6.34 15,8C15,9.66 13.66,11 12,11C10.34,11 9,9.66 9,8C9,6.34 10.34,5 12,5M18,13.66C18,15.5 16.5,17 14.66,17H9.34C7.5,17 6,15.5 6,13.66V12H18V13.66Z"/></svg>';
                         break;
                     case 'trainer':
+                        // Тренерский свисток (бирюзовый фон)
                         icon = '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z"/></svg>';
                         break;
                 }
@@ -186,6 +180,23 @@ class TelegramAuth {
         }, 2000);
     }
     
+    // Метод для определения приоритетного значка
+    getPriorityBadgeType() {
+        const userId = this.getUserId();
+        const userIdNum = parseInt(userId);
+        
+        // Приоритет: админ > тренер > боец
+        if (APP_CONFIG.admins.includes(userIdNum)) {
+            return 'admin';
+        } else if (APP_CONFIG.trainers.includes(userIdNum)) {
+            return 'trainer';
+        } else if (APP_CONFIG.contracts[userId]) {
+            return 'fighter';
+        }
+        
+        return ''; // Нет значка для обычного пользователя
+    }
+    
     // Методы для работы с ролями
     isAdmin() {
         const userId = parseInt(this.getUserId());
@@ -203,9 +214,10 @@ class TelegramAuth {
     }
     
     getUserRole() {
-        if (this.isAdmin()) return 'admin';
-        if (this.isTrainer()) return 'trainer';
-        if (this.isFighter()) return 'fighter';
+        const badgeType = this.getPriorityBadgeType();
+        if (badgeType === 'admin') return 'admin';
+        if (badgeType === 'trainer') return 'trainer';
+        if (badgeType === 'fighter') return 'fighter';
         return 'user';
     }
 }

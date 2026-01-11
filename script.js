@@ -5,14 +5,20 @@ let activeFilters = {
     sport: []
 };
 let bannerInterval;
+let currentModal = null;
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', function() {
     try {
+        // Инициализируем обработчик Telegram Web App
+        if (window.TelegramWebAppHandler) {
+            window.TelegramWebAppHandler.init();
+        }
+        
         // Сразу скрываем загрузчик
         document.getElementById('loader').style.display = 'none';
         
-        // Инициализируем Telegram Auth (синхронно)
+        // Инициализируем Telegram Auth
         window.TelegramAuth.init();
         
         // Показываем анимацию приветствия
@@ -106,15 +112,20 @@ function startBannerCarousel() {
     if (bannerInterval) clearInterval(bannerInterval);
     
     bannerInterval = setInterval(() => {
-        // Скрываем текущий слайд
-        slides[currentSlide].classList.remove('active');
+        // Добавляем анимацию затемнения перед сменой
+        slides[currentSlide].classList.add('fading');
         
-        // Увеличиваем индекс слайда
-        currentSlide = (currentSlide + 1) % slides.length;
-        
-        // Показываем следующий слайд
-        slides[currentSlide].classList.add('active');
-        
+        setTimeout(() => {
+            // Скрываем текущий слайд
+            slides[currentSlide].classList.remove('active', 'fading');
+            
+            // Увеличиваем индекс слайда
+            currentSlide = (currentSlide + 1) % slides.length;
+            
+            // Показываем следующий слайд
+            slides[currentSlide].classList.add('active');
+            
+        }, 500); // Задержка перед сменой
     }, 15000); // 15 секунд
 }
 
@@ -185,7 +196,7 @@ function loadFighters() {
             card.dataset.category = 'no_category';
             card.dataset.weight = fighter.weight_class.toLowerCase().replace(' ', '_');
             card.dataset.sport = fighter.sport.toLowerCase();
-            card.style.animationDelay = `${fighterIndex * 0.05}s`;
+            card.style.animationDelay = `${fighterIndex * 0.1}s`; // Увеличена задержка
             container.appendChild(card);
             fighterIndex++;
         });
@@ -201,7 +212,7 @@ function loadFighters() {
                     card.dataset.category = category.id;
                     card.dataset.weight = category.id;
                     card.dataset.sport = fighter.sport.toLowerCase();
-                    card.style.animationDelay = `${fighterIndex * 0.05}s`;
+                    card.style.animationDelay = `${fighterIndex * 0.1}s`;
                     container.appendChild(card);
                     fighterIndex++;
                 });
@@ -216,13 +227,19 @@ function loadFighters() {
                     card.dataset.category = category.id;
                     card.dataset.weight = fighter.weight_class.toLowerCase().replace(' ', '_');
                     card.dataset.sport = category.id;
-                    card.style.animationDelay = `${fighterIndex * 0.05}s`;
+                    card.style.animationDelay = `${fighterIndex * 0.1}s`;
                     container.appendChild(card);
                     fighterIndex++;
                 });
             });
         }
     }
+    
+    // Показываем контейнер с анимацией
+    setTimeout(() => {
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0)';
+    }, 100);
     
     // Применяем текущие фильтры
     applyFiltersToFighters();
@@ -281,17 +298,8 @@ function updateProfileDisplay() {
             nameText.textContent = auth.getUserName();
             nameContainer.appendChild(nameText);
             
-            // Добавляем значок
-            const userIdNum = parseInt(auth.getUserId());
-            let badgeType = '';
-            
-            if (APP_CONFIG.admins.includes(userIdNum)) {
-                badgeType = 'admin';
-            } else if (APP_CONFIG.trainers.includes(userIdNum)) {
-                badgeType = 'trainer';
-            } else if (APP_CONFIG.contracts[auth.getUserId()]) {
-                badgeType = 'fighter';
-            }
+            // Получаем приоритетный значок (админ > тренер > боец)
+            const badgeType = auth.getPriorityBadgeType();
             
             if (badgeType) {
                 const badge = document.createElement('div');
@@ -300,7 +308,7 @@ function updateProfileDisplay() {
                 let icon = '';
                 switch(badgeType) {
                     case 'admin':
-                        icon = '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2L4,5V11.09C4,16.14 7.41,20.85 12,22C16.59,20.85 20,16.14 20,11.09V5L12,2Z"/></svg>';
+                        icon = '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/></svg>';
                         break;
                     case 'fighter':
                         icon = '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,5C13.66,5 15,6.34 15,8C15,9.66 13.66,11 12,11C10.34,11 9,9.66 9,8C9,6.34 10.34,5 12,5M18,13.66C18,15.5 16.5,17 14.66,17H9.34C7.5,17 6,15.5 6,13.66V12H18V13.66Z"/></svg>';
@@ -421,6 +429,39 @@ function animateButtonClick(button) {
     }, 150);
 }
 
+// Функция открытия модального окна с обработкой Telegram кнопки "Назад"
+function openModal(modal) {
+    currentModal = modal;
+    document.body.appendChild(modal);
+    
+    // Показываем модалку с анимацией
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+    
+    // Показываем кнопку "Назад" в Telegram Web App
+    if (window.TelegramWebAppHandler && window.TelegramWebAppHandler.isInTelegram()) {
+        window.TelegramWebAppHandler.showBackButton(() => {
+            closeModal(modal);
+        });
+    }
+}
+
+// Функция закрытия модального окна
+function closeModal(modal) {
+    if (window.TelegramWebAppHandler && window.TelegramWebAppHandler.isInTelegram()) {
+        window.TelegramWebAppHandler.hideBackButton();
+    }
+    
+    modal.classList.remove('active');
+    setTimeout(() => {
+        if (modal.parentNode) {
+            modal.parentNode.removeChild(modal);
+        }
+        currentModal = null;
+    }, 300);
+}
+
 function showMyTickets() {
     const modal = document.createElement('div');
     modal.className = 'modal';
@@ -449,7 +490,6 @@ function showMyTickets() {
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-ticket-alt"></i> Мои билеты</h2>
-                <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 ${ticketsHTML}
@@ -462,12 +502,7 @@ function showMyTickets() {
         </div>
     `;
     
-    document.body.appendChild(modal);
-    
-    // Показываем модалку с анимацией
-    setTimeout(() => {
-        modal.classList.add('active');
-    }, 10);
+    openModal(modal);
     
     // Очистка билетов
     modal.querySelector('#clear-tickets-btn').addEventListener('click', function(e) {
@@ -481,8 +516,7 @@ function showMyTickets() {
         }, 200);
     });
     
-    // Закрытие модалки
-    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
+    // Закрытие модалки по клику на затемнение
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal(modal);
     });
@@ -546,29 +580,16 @@ function showMyFightsModal() {
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-fist-raised"></i> Мои бои</h2>
-                <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 ${fightsHTML}
-                <div style="margin-top: 20px;">
-                    <button class="btn-secondary" id="close-fights-btn">
-                        <i class="fas fa-times"></i> Закрыть
-                    </button>
-                </div>
             </div>
         </div>
     `;
     
-    document.body.appendChild(modal);
+    openModal(modal);
     
-    // Показываем модалку с анимацией
-    setTimeout(() => {
-        modal.classList.add('active');
-    }, 10);
-    
-    // Закрытие модалки
-    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
-    modal.querySelector('#close-fights-btn').addEventListener('click', () => closeModal(modal));
+    // Закрытие модалки по клику на затемнение
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal(modal);
     });
@@ -582,7 +603,6 @@ function showApplicationForm() {
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-edit"></i> Анкета для участия</h2>
-                <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <p style="text-align: center; margin-bottom: 20px; color: rgba(255,255,255,0.7);">
@@ -630,25 +650,14 @@ function showApplicationForm() {
                     <button class="btn-primary" id="submit-application-btn">
                         <i class="fas fa-paper-plane"></i> Отправить анкету в Telegram
                     </button>
-                    <button class="btn-secondary" id="close-form-btn" style="margin-top: 10px;">
-                        <i class="fas fa-times"></i> Закрыть
-                    </button>
                 </div>
             </div>
         </div>
     `;
     
-    document.body.appendChild(modal);
+    openModal(modal);
     
-    // Показываем модалку с анимацией
-    setTimeout(() => {
-        modal.classList.add('active');
-    }, 10);
-    
-    // Обработчики
-    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
-    modal.querySelector('#close-form-btn').addEventListener('click', () => closeModal(modal));
-    
+    // Закрытие модалки по клику на затемнение
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal(modal);
     });
@@ -688,7 +697,6 @@ function showAdminPanel() {
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-crown"></i> ADMIN PANEL</h2>
-                <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <div style="margin-bottom: 20px;">
@@ -709,20 +717,12 @@ function showAdminPanel() {
                     <button class="btn-primary" id="clear-all-data-btn" style="margin-bottom: 10px;">
                         <i class="fas fa-trash"></i> Очистить все данные
                     </button>
-                    <button class="btn-secondary" id="close-admin-btn">
-                        <i class="fas fa-times"></i> Закрыть
-                    </button>
                 </div>
             </div>
         </div>
     `;
     
-    document.body.appendChild(modal);
-    
-    // Показываем модалку с анимацией
-    setTimeout(() => {
-        modal.classList.add('active');
-    }, 10);
+    openModal(modal);
     
     // Очистка данных
     modal.querySelector('#clear-all-data-btn').addEventListener('click', function(e) {
@@ -736,27 +736,10 @@ function showAdminPanel() {
         }, 200);
     });
     
-    modal.querySelector('#close-admin-btn').addEventListener('click', function(e) {
-        animateButtonClick(e.target);
-        setTimeout(() => {
-            closeModal(modal);
-        }, 200);
-    });
-    
-    // Закрытие модалки
-    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
+    // Закрытие модалки по клику на затемнение
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal(modal);
     });
-}
-
-function closeModal(modal) {
-    modal.classList.remove('active');
-    setTimeout(() => {
-        if (modal.parentNode) {
-            modal.parentNode.removeChild(modal);
-        }
-    }, 300);
 }
 
 function setupEventListeners() {
@@ -794,24 +777,10 @@ function setupEventListeners() {
         });
     }
     
-    // Анимация при нажатии на кнопки
-    document.addEventListener('mousedown', function(e) {
-        if (e.target.classList.contains('btn-primary') || 
-            e.target.classList.contains('btn-secondary') ||
-            e.target.classList.contains('profile-btn') ||
-            e.target.classList.contains('filter-btn-main') ||
-            e.target.classList.contains('nav-btn')) {
-            e.target.style.transform = 'scale(0.95)';
-        }
-    });
-    
-    document.addEventListener('mouseup', function(e) {
-        if (e.target.classList.contains('btn-primary') || 
-            e.target.classList.contains('btn-secondary') ||
-            e.target.classList.contains('profile-btn') ||
-            e.target.classList.contains('filter-btn-main') ||
-            e.target.classList.contains('nav-btn')) {
-            e.target.style.transform = '';
+    // Обработка нажатия клавиши Escape для закрытия модальных окон
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && currentModal) {
+            closeModal(currentModal);
         }
     });
 }
@@ -824,7 +793,6 @@ function showFilterModal() {
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-filter"></i> Фильтр бойцов</h2>
-                <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="filter-section">
@@ -883,12 +851,7 @@ function showFilterModal() {
         </div>
     `;
     
-    document.body.appendChild(modal);
-    
-    // Показываем модалку с анимацией
-    setTimeout(() => {
-        modal.classList.add('active');
-    }, 10);
+    openModal(modal);
     
     // Обработчики чекбоксов
     modal.querySelectorAll('.filter-option').forEach(option => {
@@ -949,8 +912,7 @@ function showFilterModal() {
         }, 200);
     });
     
-    // Закрытие модалки
-    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
+    // Закрытие модалки по клику на затемнение
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal(modal);
     });
@@ -959,6 +921,15 @@ function showFilterModal() {
 function applyFiltersToFighters() {
     const fighters = document.querySelectorAll('.fighter-card');
     
+    // Сначала скрываем всех
+    fighters.forEach(fighter => {
+        fighter.style.display = 'none';
+        fighter.style.opacity = '0';
+        fighter.style.transform = 'translateY(15px)';
+    });
+    
+    // Затем показываем подходящих с анимацией
+    let delay = 0;
     fighters.forEach(fighter => {
         const fighterWeight = fighter.dataset.weight;
         const fighterSport = fighter.dataset.sport;
@@ -967,10 +938,14 @@ function applyFiltersToFighters() {
         let sportMatch = activeFilters.sport.length === 0 || activeFilters.sport.includes(fighterSport);
         
         if (weightMatch && sportMatch) {
-            fighter.style.display = 'flex';
-            fighter.style.animation = 'slideUp 0.5s ease-out';
-        } else {
-            fighter.style.display = 'none';
+            setTimeout(() => {
+                fighter.style.display = 'flex';
+                setTimeout(() => {
+                    fighter.style.opacity = '1';
+                    fighter.style.transform = 'translateY(0)';
+                }, 10);
+            }, delay);
+            delay += 50; // Задержка между появлением карточек
         }
     });
 }
@@ -1018,6 +993,15 @@ function switchPage(page) {
             loadFighters();
         }, 300);
     }
+    
+    // Скрываем кнопку "Назад" при переключении страниц
+    if (window.TelegramWebAppHandler && window.TelegramWebAppHandler.isInTelegram() && currentModal) {
+        window.TelegramWebAppHandler.hideBackButton();
+        if (currentModal.parentNode) {
+            currentModal.parentNode.removeChild(currentModal);
+            currentModal = null;
+        }
+    }
 }
 
 function showNotification(message) {
@@ -1033,7 +1017,6 @@ function showNotification(message) {
                 <i class="fas fa-info-circle"></i>
             </div>
             <div class="notification-text">${message}</div>
-            <button class="notification-close">&times;</button>
         </div>
     `;
     
@@ -1041,16 +1024,6 @@ function showNotification(message) {
     
     // Показываем с анимацией
     setTimeout(() => notification.classList.add('show'), 10);
-    
-    // Закрытие по клику
-    notification.querySelector('.notification-close').addEventListener('click', () => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 400);
-    });
     
     // Автозакрытие через 4 секунды
     setTimeout(() => {
