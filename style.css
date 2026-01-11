@@ -69,33 +69,31 @@ body {
     font-size: 1.2rem;
 }
 
-/* Хедер - Исправлен для iOS */
+/* Хедер - СДЕЛАН ПРОЗРАЧНЫМ */
 .glass-header {
-    background: rgba(15, 15, 30, 0.95);
+    background: rgba(15, 15, 30, 0.6);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 10px 20px;
+    padding: 5px 20px;
     position: sticky;
     top: 0;
     z-index: 100;
-    height: 60px;
+    height: 55px;
     display: flex;
     align-items: center;
-    border-radius: 0 0 20px 20px;
-    margin: 0 10px;
-    width: calc(100% - 20px);
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
 }
 
 .header-content {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 5px;
 }
 
 .logo-container {
@@ -104,14 +102,14 @@ body {
 }
 
 .logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
     object-fit: cover;
 }
 
 .app-title {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #ffffff !important;
     background: none !important;
@@ -138,12 +136,6 @@ body {
 .telegram-welcome.active {
     display: flex;
     opacity: 1;
-    animation: welcomeSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes welcomeSlideIn {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 .welcome-content {
@@ -152,18 +144,12 @@ body {
 }
 
 .welcome-avatar {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0 auto 20px;
+    margin: 0 auto 15px;
     border: 3px solid var(--primary-color);
-    animation: avatarPulse 2s infinite;
-}
-
-@keyframes avatarPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
 }
 
 .welcome-avatar img {
@@ -173,14 +159,14 @@ body {
 }
 
 .welcome-name {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .welcome-id {
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 @keyframes fadeIn {
@@ -190,124 +176,67 @@ body {
 
 /* Основной контент */
 main {
-    padding: 20px;
-    padding-top: 80px;
-    animation: mainFadeIn 0.4s ease-out;
-}
-
-@keyframes mainFadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    padding: 15px;
+    padding-top: 70px;
 }
 
 .page {
     display: none;
-    animation: pageSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .page.active {
     display: block;
-    animation: pageSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes pageSlideIn {
-    from { 
-        opacity: 0;
-        transform: translateX(20px);
-    }
-    to { 
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Баннеры */
+/* Баннеры - УБРАНА ВОЗМОЖНОСТЬ ЛИСТАТЬ */
 .banner-container {
-    margin: 20px 0;
+    margin: 15px 0;
     position: relative;
-    min-height: 180px;
+    min-height: 150px;
     overflow: hidden;
-    border-radius: 15px;
-}
-
-.banner-slider {
-    display: flex;
-    transition: transform 0.5s ease;
-    width: 300%;
+    border-radius: 12px;
 }
 
 .banner {
     width: 100%;
-    height: 180px;
-    border-radius: 15px;
+    height: 150px;
+    border-radius: 12px;
     overflow: hidden;
     position: relative;
-    flex-shrink: 0;
 }
 
 .banner img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s;
-}
-
-.banner:hover img {
-    transform: scale(1.05);
-}
-
-.banner-dots {
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-}
-
-.banner-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.banner-dot.active {
-    background: var(--primary-color);
-    transform: scale(1.2);
 }
 
 /* Карточки */
 .fight-card, .news-card, .video-card, .fighter-card {
     background: var(--card-bg);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 15px;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s;
     cursor: pointer;
-    transform-origin: center;
 }
 
 .fight-card:hover, .news-card:hover, .video-card:hover, .fighter-card:hover {
-    transform: translateY(-5px) scale(1.02);
+    transform: translateY(-3px);
     border-color: rgba(255, 107, 107, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .fight-card h3 {
     color: var(--primary-color);
-    margin-bottom: 10px;
-    font-size: 1.2rem;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
 }
 
 .fight-card p {
     color: var(--text-secondary);
-    margin: 5px 0;
-    font-size: 0.95rem;
+    margin: 4px 0;
+    font-size: 0.9rem;
 }
 
 /* Кнопки */
@@ -315,66 +244,51 @@ main {
     background: linear-gradient(45deg, var(--primary-color), #FF8E8E);
     color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 12px;
+    padding: 12px 20px;
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    max-width: 300px;
-    margin: 0 auto;
-    display: block;
-    width: auto;
-    min-width: 140px;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 10px;
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
 }
 
 .btn-secondary {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s;
-    max-width: 300px;
-    margin: 10px auto 0;
-    display: block;
-    width: auto;
-    min-width: 140px;
+    width: 100%;
+    margin-top: 10px;
 }
 
 .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
 }
 
 .buy-ticket-btn {
-    max-width: 200px;
-    margin: 10px auto 0;
-    padding: 10px 20px;
+    padding: 10px 15px;
     font-size: 0.9rem;
 }
 
 /* Секции */
 .upcoming-fights, .news-section, .videos-container {
-    margin: 30px 0;
-    animation: sectionFadeIn 0.5s ease-out;
-}
-
-@keyframes sectionFadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    margin: 25px 0;
 }
 
 .upcoming-fights h2, .news-section h2, .videos-container h2, .fighters-page h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -387,55 +301,50 @@ main {
 /* Новости */
 .news-grid {
     display: grid;
-    gap: 15px;
+    gap: 12px;
 }
 
 .news-date {
     color: var(--secondary-color);
-    font-size: 0.9rem;
-    margin-bottom: 10px;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
 }
 
 .news-card h3 {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1rem;
+    margin-bottom: 8px;
     color: var(--text-primary);
 }
 
 .news-card p {
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 /* Видео */
 .videos-grid {
     display: grid;
-    gap: 20px;
+    gap: 15px;
 }
 
 .video-thumbnail {
     width: 100%;
-    height: 200px;
-    border-radius: 10px;
+    height: 180px;
+    border-radius: 8px;
     object-fit: cover;
-    margin-bottom: 15px;
-    transition: transform 0.3s;
-}
-
-.video-thumbnail:hover {
-    transform: scale(1.03);
+    margin-bottom: 12px;
 }
 
 .video-description {
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    margin: 10px 0;
+    font-size: 0.9rem;
+    margin: 8px 0;
 }
 
 .video-date {
     color: var(--secondary-color);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 /* Бойцы */
@@ -446,61 +355,45 @@ main {
 .filter-buttons {
     display: flex;
     justify-content: center;
-    margin: 20px 0;
+    margin: 15px 0;
 }
 
 .filter-btn-main {
     background: rgba(255, 107, 107, 0.2);
     border: 1px solid rgba(255, 107, 107, 0.3);
     color: var(--primary-color);
-    padding: 12px 30px;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s;
     display: flex;
     align-items: center;
-    gap: 10px;
-    min-width: 200px;
-    justify-content: center;
+    gap: 8px;
 }
 
 .filter-btn-main:hover {
     background: rgba(255, 107, 107, 0.3);
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+    transform: translateY(-2px);
 }
 
 .fighters-container {
     display: grid;
-    gap: 15px;
+    gap: 12px;
 }
 
 .fighter-card {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 15px;
-    animation: cardAppear 0.4s ease-out;
-    animation-fill-mode: both;
-}
-
-@keyframes cardAppear {
-    from { 
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-    }
-    to { 
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    gap: 12px;
+    padding: 12px;
 }
 
 .fighter-photo {
-    width: 70px;
-    height: 70px;
-    border-radius: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -518,27 +411,27 @@ main {
 
 .fighter-rank {
     color: var(--primary-color);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .fighter-name {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     color: white;
 }
 
 .fighter-record {
     color: var(--secondary-color);
-    font-size: 0.95rem;
-    margin-bottom: 5px;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
 }
 
 .fighter-details {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 /* Профиль */
@@ -549,16 +442,16 @@ main {
 
 .profile-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     position: relative;
 }
 
 .avatar-container {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0 auto 20px;
+    margin: 0 auto 15px;
     border: 3px solid var(--primary-color);
     position: relative;
 }
@@ -579,13 +472,13 @@ main {
 }
 
 .user-badge {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .badge-admin {
@@ -604,60 +497,58 @@ main {
 }
 
 .badge-icon {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
 }
 
 .profile-header h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     margin-bottom: 5px;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .status {
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .profile-actions {
     display: grid;
-    gap: 10px;
+    gap: 8px;
 }
 
 .profile-btn {
     background: var(--card-bg);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 15px;
-    padding: 15px;
+    border-radius: 12px;
+    padding: 12px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s;
     text-align: left;
     width: 100%;
-    transform-origin: left center;
 }
 
 .profile-btn:hover {
-    transform: translateX(10px) scale(1.02);
+    transform: translateX(5px);
     border-color: rgba(255, 107, 107, 0.3);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .btn-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     background: rgba(255, 107, 107, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--primary-color);
 }
 
@@ -668,7 +559,7 @@ main {
 .btn-title {
     display: block;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-bottom: 3px;
     color: white;
 }
@@ -676,7 +567,7 @@ main {
 .btn-subtitle {
     display: block;
     color: var(--text-secondary);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 /* Модальные окна */
@@ -686,69 +577,32 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 1002;
-    padding: 20px;
-    opacity: 0;
-    transition: opacity 0.3s;
+    padding: 15px;
 }
 
 .modal.active {
     display: flex;
-    opacity: 1;
-    animation: modalBackdropIn 0.3s ease-out;
-}
-
-@keyframes modalBackdropIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
 
 .modal-content {
     background: var(--dark-bg);
-    border-radius: 20px;
+    border-radius: 15px;
     width: 100%;
-    max-width: 500px;
-    max-height: 90vh;
+    max-width: 450px;
+    max-height: 85vh;
     overflow-y: auto;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: center;
-}
-
-@keyframes modalSlideIn {
-    from { 
-        opacity: 0;
-        transform: translateY(40px) scale(0.95);
-    }
-    to { 
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.modal.closing .modal-content {
-    animation: modalSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes modalSlideOut {
-    from { 
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-    to { 
-        opacity: 0;
-        transform: translateY(40px) scale(0.95);
-    }
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-header {
-    padding: 20px;
+    padding: 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
@@ -756,15 +610,15 @@ main {
     position: sticky;
     top: 0;
     background: var(--dark-bg);
-    border-radius: 20px 20px 0 0;
+    border-radius: 15px 15px 0 0;
     z-index: 1;
 }
 
 .modal-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     color: white;
 }
 
@@ -774,112 +628,95 @@ main {
     color: var(--text-secondary);
     font-size: 1.5rem;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 8px;
     transition: all 0.3s;
 }
 
 .modal-close:hover {
     background: rgba(255, 107, 107, 0.2);
     color: var(--primary-color);
-    transform: rotate(90deg);
 }
 
 .modal-body {
-    padding: 20px;
+    padding: 15px;
 }
 
 /* Формы */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
     display: block;
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
 }
 
 .form-input, .form-textarea {
     width: 100%;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 12px 15px;
+    border-radius: 8px;
+    padding: 10px 12px;
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: all 0.3s;
 }
 
 .form-input:focus, .form-textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
 .form-textarea {
-    min-height: 100px;
+    min-height: 80px;
     resize: vertical;
 }
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.form-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 25px;
-}
-
-.form-buttons .btn-primary,
-.form-buttons .btn-secondary {
-    width: 100%;
-    max-width: none;
-    margin: 0;
+    gap: 12px;
 }
 
 /* Стили для фильтров */
 .filter-section {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .filter-section h3 {
     color: var(--text-primary);
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
 }
 
 .filter-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: 10px;
+    margin-bottom: 8px;
 }
 
 .filter-option {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 12px;
+    border-radius: 8px;
+    padding: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .filter-option:hover {
     background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
 }
 
 .filter-option.active {
@@ -888,8 +725,8 @@ main {
 }
 
 .filter-option input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     accent-color: var(--primary-color);
 }
 
@@ -897,49 +734,45 @@ main {
     color: var(--text-primary);
     cursor: pointer;
     flex: 1;
+    font-size: 0.9rem;
 }
 
 /* Модалка "Мои бои" */
 .fights-list-container {
-    max-height: 400px;
+    max-height: 350px;
     overflow-y: auto;
 }
 
 .fight-item {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 10px;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
     border-left: 4px solid var(--primary-color);
-    transition: transform 0.3s;
-}
-
-.fight-item:hover {
-    transform: translateX(5px);
 }
 
 .fight-item h3 {
     color: var(--primary-color);
-    margin-bottom: 10px;
-    font-size: 1.1rem;
+    margin-bottom: 8px;
+    font-size: 1rem;
 }
 
 .fight-details {
     color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 5px;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .fight-status {
     display: inline-block;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.75rem;
     font-weight: 600;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 .fight-status.upcoming {
@@ -960,22 +793,22 @@ main {
 .no-fights {
     text-align: center;
     color: var(--text-secondary);
-    padding: 40px 20px;
-    font-size: 1.1rem;
+    padding: 30px 15px;
+    font-size: 1rem;
 }
 
-/* Навигация - Исправлен для iOS */
+/* Навигация - СДЕЛАН ПРОЗРАЧНЫМ */
 .glass-nav {
     position: fixed;
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 20px);
-    max-width: 500px;
-    padding: 8px;
+    max-width: 450px;
+    padding: 6px;
     z-index: 1000;
-    border-radius: 20px;
-    background: rgba(15, 15, 30, 0.95);
+    border-radius: 15px;
+    background: rgba(15, 15, 30, 0.6);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -1001,38 +834,21 @@ main {
     background: transparent;
     border: none;
     color: rgba(255, 255, 255, 0.7);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    padding: 10px 15px;
-    border-radius: 10px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 50px;
-    min-height: 50px;
-    position: relative;
-    overflow: hidden;
-}
-
-.nav-btn::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 3px;
-    background: var(--primary-color);
-    transition: width 0.3s;
+    min-width: 45px;
+    min-height: 45px;
 }
 
 .nav-btn.active {
+    background: rgba(255, 107, 107, 0.2);
     color: #FF6B6B;
-}
-
-.nav-btn.active::after {
-    width: 20px;
 }
 
 /* Уведомления */
@@ -1042,34 +858,32 @@ main {
     right: -400px;
     background: rgba(15, 15, 30, 0.95);
     border: 1px solid rgba(255, 107, 107, 0.3);
-    border-radius: 12px;
-    padding: 15px 20px;
+    border-radius: 10px;
+    padding: 12px 15px;
     z-index: 9999;
-    max-width: 350px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    max-width: 320px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: right 0.4s;
 }
 
 .notification.show {
-    right: 20px;
+    right: 15px;
 }
 
 .notification-content {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .notification-icon {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: var(--primary-color);
 }
 
 .notification-text {
     color: white;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     flex: 1;
 }
 
@@ -1078,10 +892,10 @@ main {
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     padding: 0;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1098,67 +912,65 @@ main {
 .admin-stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 15px;
 }
 
 .admin-stat-card {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 15px;
+    border-radius: 8px;
+    padding: 12px;
     text-align: center;
 }
 
 .admin-stat-value {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .admin-stat-label {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .admin-actions {
     display: grid;
-    gap: 10px;
+    gap: 8px;
 }
 
 .admin-action-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 15px;
+    border-radius: 8px;
+    padding: 12px;
     color: var(--text-primary);
     text-align: left;
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .admin-action-btn:hover {
     background: rgba(255, 107, 107, 0.1);
     border-color: var(--primary-color);
-    transform: translateX(5px);
 }
 
 .admin-action-btn i {
     color: var(--primary-color);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
     .glass-header {
-        margin: 0 10px;
-        width: calc(100% - 20px);
+        padding: 5px 15px;
     }
     
     .app-title {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
     
     .form-row {
@@ -1186,7 +998,7 @@ main {
     }
     
     .notification {
-        max-width: calc(100% - 40px);
+        max-width: calc(100% - 30px);
     }
 }
 
@@ -1203,21 +1015,7 @@ main {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    .glass-header {
-        max-width: 700px;
-    }
-    
     .glass-nav {
-        max-width: 500px;
+        max-width: 450px;
     }
-}
-
-/* Image Cache Helper */
-.img-cached {
-    animation: imgFadeIn 0.5s ease-out;
-}
-
-@keyframes imgFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }

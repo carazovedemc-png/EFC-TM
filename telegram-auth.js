@@ -8,7 +8,7 @@ class TelegramAuth {
         this.isInitialized = false;
     }
 
-    async init() {
+    init() {
         try {
             if (this.tg) {
                 // Запуск в Telegram
@@ -16,10 +16,10 @@ class TelegramAuth {
                 this.tg.ready();
                 
                 // Получаем данные пользователя
-                await this.loadUserFromTelegram();
+                this.loadUserFromTelegram();
             } else {
                 // Режим разработки (браузер)
-                await this.loadUserFromStorage();
+                this.loadUserFromStorage();
             }
             
             this.isInitialized = true;
@@ -34,7 +34,7 @@ class TelegramAuth {
         }
     }
 
-    async loadUserFromTelegram() {
+    loadUserFromTelegram() {
         if (!this.tg?.initDataUnsafe?.user) {
             throw new Error('Нет данных пользователя Telegram');
         }
@@ -52,7 +52,7 @@ class TelegramAuth {
         };
     }
 
-    async loadUserFromStorage() {
+    loadUserFromStorage() {
         try {
             const savedUser = localStorage.getItem('tg_user');
             if (savedUser) {
@@ -69,7 +69,7 @@ class TelegramAuth {
 
     createTestUser() {
         this.user = {
-            id: Date.now(),
+            id: 1745639675,
             first_name: 'Тестовый',
             last_name: 'Пользователь',
             username: 'test_user',
@@ -123,7 +123,7 @@ class TelegramAuth {
 
     showWelcomeAnimation() {
         const welcomeEl = document.getElementById('telegram-welcome');
-        if (!welcomeEl || !this.user) return;
+        if (!welcomeEl) return;
         
         const avatarEl = document.getElementById('welcome-avatar');
         const nameEl = document.getElementById('welcome-name');
@@ -141,10 +141,33 @@ class TelegramAuth {
         // Показываем анимацию
         welcomeEl.classList.add('active');
         
-        // Скрываем через 2.5 секунды
+        // Скрываем через 2 секунды
         setTimeout(() => {
             welcomeEl.classList.remove('active');
-        }, 2500);
+        }, 2000);
+    }
+    
+    // Методы для работы с ролями
+    isAdmin() {
+        const userId = parseInt(this.getUserId());
+        return APP_CONFIG.admins.includes(userId);
+    }
+    
+    isTrainer() {
+        const userId = parseInt(this.getUserId());
+        return APP_CONFIG.trainers.includes(userId);
+    }
+    
+    isFighter() {
+        const userId = this.getUserId();
+        return APP_CONFIG.contracts.hasOwnProperty(userId);
+    }
+    
+    getUserRole() {
+        if (this.isAdmin()) return 'admin';
+        if (this.isTrainer()) return 'trainer';
+        if (this.isFighter()) return 'fighter';
+        return 'user';
     }
 }
 
